@@ -1,0 +1,13 @@
+<resources>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blue_primary">#00A3FF</color>
+    <color name="orange_primary">#FF8A00</color>
+    <color name="gold_primary">#E7C36A</color>
+    <color name="gray_icon">#5A5A5A</color>
+    <color name="card_border">#F2F2F2</color>
+    <color name="green_button">#B9E8A7</color>
+    <color name="red_button">#F3B1B1</color>
+    <color name="teal_message">#27D3C5</color>
+    <color name="primary">#2196F3</color>
+</resources>
