@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/black">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tiêu đề"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textColorHint="#AAAAAA" />
 
         <EditText
@@ -23,10 +23,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:gravity="top"
             android:hint="Mô tả"
             android:minLines="3"
-            android:gravity="top"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textColorHint="#AAAAAA" />
 
         <EditText
@@ -36,7 +36,7 @@
             android:layout_marginTop="12dp"
             android:hint="Giá"
             android:inputType="numberDecimal"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textColorHint="#AAAAAA" />
 
         <EditText
@@ -46,7 +46,7 @@
             android:layout_marginTop="12dp"
             android:hint="Diện tích"
             android:inputType="numberDecimal"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textColorHint="#AAAAAA" />
 
         <EditText
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="Địa chỉ"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textColorHint="#AAAAAA" />
 
         <EditText
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="Quận/Huyện"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textColorHint="#AAAAAA" />
 
         <RadioGroup
@@ -79,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cho thuê"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/white" />
 
             <RadioButton
                 android:id="@+id/radioRoommate"
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:text="Ở ghép"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/white" />
         </RadioGroup>
 
         <Button
@@ -104,14 +104,21 @@
             android:layout_marginTop="10dp"
             android:text="Chụp ảnh" />
 
+        <Button
+            android:id="@+id/btnCreatePanorama"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Chọn ảnh panorama (360)" />
+
         <ImageView
             android:id="@+id/imgPreview"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
             android:background="#222222"
-            android:contentDescription="preview" />
+            android:contentDescription="preview"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/txtImageCount"
@@ -119,7 +126,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Đã chọn: 0 ảnh"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/txtPanoramaStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Chưa có ảnh panorama"
+            android:textColor="#BBBBBB" />
 
         <Button
             android:id="@+id/btnCreatePost"

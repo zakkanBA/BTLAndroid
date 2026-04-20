@@ -16,33 +16,14 @@ public class Post {
     private String district;
     private double lat;
     private double lng;
-    private String type; // rent | roommate
+    private String type;
     private List<String> images;
-    private String status; // active
+    private String panoramaImage;
+    private String status;
     private Timestamp createdAt;
 
     public Post() {
         images = new ArrayList<>();
-    }
-
-    public Post(String postId, String userId, String title, String description,
-                double price, double area, String address, String district,
-                double lat, double lng, String type, List<String> images,
-                String status, Timestamp createdAt) {
-        this.postId = postId;
-        this.userId = userId;
-        this.title = title;
-        this.description = description;
-        this.price = price;
-        this.area = area;
-        this.address = address;
-        this.district = district;
-        this.lat = lat;
-        this.lng = lng;
-        this.type = type;
-        this.images = images;
-        this.status = status;
-        this.createdAt = createdAt;
     }
 
     public String getPostId() {
@@ -139,6 +120,14 @@ public class Post {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public String getPanoramaImage() {
+        return panoramaImage;
+    }
+
+    public void setPanoramaImage(String panoramaImage) {
+        this.panoramaImage = panoramaImage;
     }
 
     public String getStatus() {

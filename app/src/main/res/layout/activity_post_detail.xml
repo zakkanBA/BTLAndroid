@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/black">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,8 +13,8 @@
             android:id="@+id/imgPost"
             android:layout_width="match_parent"
             android:layout_height="260dp"
-            android:scaleType="centerCrop"
-            android:background="#222222" />
+            android:background="#222222"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Tiêu đề"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="20 m²"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="15sp" />
 
             <TextView
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:text="Mô tả"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -85,20 +85,22 @@
                 android:text="Nội dung mô tả"
                 android:textColor="#DDDDDD"
                 android:textSize="15sp" />
-            <TextView
-                android:layout_width="wrap_content"
+
+            <Button
+                android:id="@+id/btnView360"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="360°"
-                android:textColor="#FFFFFF"
-                android:background="#AA000000"
-                android:padding="6dp"
-                android:layout_margin="8dp"/>
+                android:layout_marginTop="20dp"
+                android:text="Xem ảnh 360"
+                android:visibility="gone" />
+
             <Button
                 android:id="@+id/btnChat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="12dp"
                 android:text="Nhắn tin" />
+
             <Button
                 android:id="@+id/btnEditPost"
                 android:layout_width="match_parent"
@@ -114,6 +116,7 @@
                 android:layout_marginTop="12dp"
                 android:text="Xóa bài"
                 android:visibility="gone" />
+
         </LinearLayout>
 
     </LinearLayout>

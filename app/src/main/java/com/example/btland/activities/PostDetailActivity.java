@@ -61,9 +61,22 @@ public class PostDetailActivity extends AppCompatActivity {
         binding.btnEditPost.setVisibility(isOwner ? android.view.View.VISIBLE : android.view.View.GONE);
         binding.btnDeletePost.setVisibility(isOwner ? android.view.View.VISIBLE : android.view.View.GONE);
         binding.btnChat.setVisibility(isOwner ? android.view.View.GONE : android.view.View.VISIBLE);
+
+        String panoramaUrl = post.getPanoramaImage();
+        if (panoramaUrl != null && !panoramaUrl.isEmpty()) {
+            binding.btnView360.setVisibility(android.view.View.VISIBLE);
+        } else {
+            binding.btnView360.setVisibility(android.view.View.GONE);
+        }
     }
 
     private void setupActions() {
+        binding.btnView360.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PanoramaViewActivity.class);
+            intent.putExtra("panorama_url", post.getPanoramaImage());
+            startActivity(intent);
+        });
+
         binding.btnChat.setOnClickListener(v -> {
             if (currentUserId == null) {
                 Toast.makeText(this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();

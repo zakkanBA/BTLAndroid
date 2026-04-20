@@ -36,11 +36,13 @@ public class CreatePostActivity extends AppCompatActivity {
 
     private final List<Uri> selectedImageUris = new ArrayList<>();
     private Uri cameraImageUri;
+    private Uri panoramaImageUri;
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
 
     private ActivityResultLauncher<PickVisualMediaRequest> pickImagesLauncher;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickPanoramaLauncher;
     private ActivityResultLauncher<Uri> takePictureLauncher;
     private ActivityResultLauncher<String> requestCameraPermissionLauncher;
     private ActivityResultLauncher<String> requestReadPermissionLauncher;
@@ -61,9 +63,11 @@ public class CreatePostActivity extends AppCompatActivity {
     private void initViews() {
         binding.radioRent.setChecked(true);
         updateImageCount();
+        updatePanoramaStatus();
 
         binding.btnPickImages.setOnClickListener(v -> openGallery());
         binding.btnCaptureImage.setOnClickListener(v -> openCamera());
+        binding.btnCreatePanorama.setOnClickListener(v -> openPanoramaPicker());
         binding.btnCreatePost.setOnClickListener(v -> validateAndCreatePost());
     }
 
@@ -76,6 +80,16 @@ public class CreatePostActivity extends AppCompatActivity {
                         selectedImageUris.addAll(uris);
                         showPreview();
                         updateImageCount();
+                    }
+                });
+
+        pickPanoramaLauncher = registerForActivityResult(
+                new ActivityResultContracts.PickVisualMedia(),
+                uri -> {
+                    if (uri != null) {
+                        panoramaImageUri = uri;
+                        updatePanoramaStatus();
+                        Toast.makeText(this, "Đã chọn ảnh panorama", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -135,6 +149,28 @@ public class CreatePostActivity extends AppCompatActivity {
         );
     }
 
+    private void openPanoramaPicker() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            launchPanoramaPicker();
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            launchPanoramaPicker();
+        } else {
+            requestReadPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    private void launchPanoramaPicker() {
+        pickPanoramaLauncher.launch(
+                new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build()
+        );
+    }
+
     private void openCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -176,6 +212,12 @@ public class CreatePostActivity extends AppCompatActivity {
 
     private void updateImageCount() {
         binding.txtImageCount.setText("Đã chọn: " + selectedImageUris.size() + " ảnh");
+    }
+
+    private void updatePanoramaStatus() {
+        binding.txtPanoramaStatus.setText(
+                panoramaImageUri == null ? "Chưa có ảnh panorama" : "Đã có ảnh panorama"
+        );
     }
 
     private void validateAndCreatePost() {
@@ -265,7 +307,7 @@ public class CreatePostActivity extends AppCompatActivity {
                                    double price, double area, String address, String district,
                                    double lat, double lng, String type) {
         if (index >= selectedImageUris.size()) {
-            savePostToFirestore(title, description, price, area, address, district, lat, lng, type, uploadedUrls);
+            uploadPanoramaIfNeeded(title, description, price, area, address, district, lat, lng, type, uploadedUrls);
             return;
         }
 
@@ -292,9 +334,36 @@ public class CreatePostActivity extends AppCompatActivity {
         });
     }
 
+    private void uploadPanoramaIfNeeded(String title, String description, double price, double area,
+                                        String address, String district, double lat, double lng,
+                                        String type, List<String> imageUrls) {
+        if (panoramaImageUri == null) {
+            savePostToFirestore(title, description, price, area, address, district, lat, lng, type, imageUrls, "");
+            return;
+        }
+
+        CloudinaryHelper.uploadImage(this, panoramaImageUri, new CloudinaryHelper.UploadCallback() {
+            @Override
+            public void onSuccess(String panoramaUrl) {
+                runOnUiThread(() ->
+                        savePostToFirestore(title, description, price, area, address, district, lat, lng, type, imageUrls, panoramaUrl)
+                );
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                runOnUiThread(() -> {
+                    binding.btnCreatePost.setEnabled(true);
+                    Toast.makeText(CreatePostActivity.this,
+                            "Upload ảnh panorama thất bại: " + errorMessage, Toast.LENGTH_LONG).show();
+                });
+            }
+        });
+    }
+
     private void savePostToFirestore(String title, String description, double price, double area,
                                      String address, String district, double lat, double lng,
-                                     String type, List<String> imageUrls) {
+                                     String type, List<String> imageUrls, String panoramaUrl) {
         String uid = auth.getCurrentUser().getUid();
         String postId = db.collection("posts").document().getId();
 
@@ -311,6 +380,7 @@ public class CreatePostActivity extends AppCompatActivity {
         post.put("lng", lng);
         post.put("type", type);
         post.put("images", imageUrls);
+        post.put("panoramaImage", panoramaUrl);
         post.put("status", "active");
         post.put("createdAt", Timestamp.now());
 

@@ -20,7 +20,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCvZHszUjLprKP_3U88VkPykt-fpNwKOcU" />
-
+        <activity android:name=".activities.PanoramaViewActivity" />
         <activity android:name=".activities.AdminUserPostsActivity" />
         <activity android:name=".activities.AdminUserManagementActivity" />
         <activity android:name=".activities.EditProfileActivity" />
