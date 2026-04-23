@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,82 +10,13 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <EditText
-            android:id="@+id/edtTitle"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tiêu đề"
-            android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Mô tả"
-            android:minLines="3"
-            android:gravity="top"
-            android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Giá"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtArea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Diện tích"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Địa chỉ"
-            android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtDistrict"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Quận/Huyện"
-            android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtLat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Latitude"
-            android:inputType="numberDecimal|numberSigned"
-            android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtLng"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Longitude"
-            android:inputType="numberDecimal|numberSigned"
-            android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA" />
+            android:text="Chỉnh sửa bài đăng"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold" />
 
         <RadioGroup
             android:id="@+id/radioGroupType"
@@ -98,17 +29,111 @@
                 android:id="@+id/radioRent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cho thuê"
-                android:textColor="@android:color/black" />
+                android:text="Cho thuê" />
 
             <RadioButton
                 android:id="@+id/radioRoommate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:text="Ở ghép"
-                android:textColor="@android:color/black" />
+                android:layout_marginStart="16dp"
+                android:text="Ở ghép" />
         </RadioGroup>
+
+        <Spinner
+            android:id="@+id/spinnerRoomType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <EditText
+            android:id="@+id/edtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Tiêu đề"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <EditText
+            android:id="@+id/edtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="top"
+            android:hint="Mô tả"
+            android:minLines="4"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <EditText
+            android:id="@+id/edtPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Giá"
+            android:inputType="numberDecimal"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <EditText
+            android:id="@+id/edtArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Diện tích"
+            android:inputType="numberDecimal"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <EditText
+            android:id="@+id/edtAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Địa chỉ"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <EditText
+            android:id="@+id/edtDistrict"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Quận/Huyện"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Tiện ích"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/cbWifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wi-Fi" />
+
+        <CheckBox
+            android:id="@+id/cbParking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chỗ để xe" />
+
+        <CheckBox
+            android:id="@+id/cbPrivateWc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WC riêng" />
+
+        <CheckBox
+            android:id="@+id/cbAirConditioner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Máy lạnh" />
 
         <Button
             android:id="@+id/btnUpdatePost"
@@ -116,5 +141,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Cập nhật bài đăng" />
+
     </LinearLayout>
 </ScrollView>

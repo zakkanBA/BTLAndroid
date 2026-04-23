@@ -3,12 +3,16 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
 
     <application
+        android:name=".BTLApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="BTLAND"
@@ -17,14 +21,20 @@
         android:theme="@style/Theme.BTLAND"
         tools:targetApi="31">
 
+<!--        <meta-data-->
+<!--            android:name="com.google.android.geo.API_KEY"-->
+<!--            android:value="AIzaSyCvZHszUjLprKP_3U88VkPykt-fpNwKOcU"-->
+<!--            />-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCvZHszUjLprKP_3U88VkPykt-fpNwKOcU" />
+            android:value="AIzaSyCSyd733XPIqES3dRcS94Rdk0a-SKFNPxw"
+            />
 
+        <activity android:name=".activities.PanoramaViewActivity" />
         <activity android:name=".activities.AdminUserPostsActivity" />
         <activity android:name=".activities.AdminUserManagementActivity" />
         <activity android:name=".activities.EditProfileActivity" />
-<!--        <activity android:name=".activities.FilterActivity" />-->
+        <!-- <activity android:name=".activities.FilterActivity" /> -->
         <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.PostDetailActivity" />
         <activity android:name=".activities.CreatePostActivity" />

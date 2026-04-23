@@ -2,6 +2,7 @@ package com.example.btland.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,9 +37,15 @@ public class RegisterActivity extends AppCompatActivity {
         String email = binding.edtEmail.getText().toString().trim();
         String phone = binding.edtPhone.getText().toString().trim();
         String password = binding.edtPassword.getText().toString().trim();
+        String confirmPassword = binding.edtConfirmPassword.getText().toString().trim();
 
-        if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
+        if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(this, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Email không đúng định dạng", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -47,15 +54,24 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Mật khẩu xác nhận không khớp", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful() || task.getResult() == null || task.getResult().getUser() == null) {
-                        Toast.makeText(this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
+                        String message = task.getException() != null
+                                && task.getException().getMessage() != null
+                                && task.getException().getMessage().contains("email address is already in use")
+                                ? "Email đã được sử dụng"
+                                : "Đăng ký thất bại";
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     String uid = task.getResult().getUser().getUid();
-
                     Map<String, Object> user = new HashMap<>();
                     user.put("userId", uid);
                     user.put("name", name);
@@ -72,10 +88,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 startActivity(new Intent(this, MainActivity.class));
                                 finishAffinity();
                             })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(this, "Lưu user thất bại", Toast.LENGTH_SHORT).show();
-                            });
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this, "Lưu người dùng thất bại", Toast.LENGTH_SHORT).show()
+                            );
                 });
-
     }
 }

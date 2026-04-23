@@ -8,41 +8,33 @@ import java.util.List;
 public class Post {
     private String postId;
     private String userId;
+    private String ownerName;
+    private String ownerPhone;
     private String title;
     private String description;
     private double price;
     private double area;
     private String address;
     private String district;
+    private String roomType;
     private double lat;
     private double lng;
-    private String type; // rent | roommate
+    private String type;
     private List<String> images;
-    private String status; // active
+    private List<String> amenities;
+    private String panoramaImage;
+    private String panoramaPath;
+    private String storageFolder;
+    private String status;
+    private Boolean active;
     private Timestamp createdAt;
+    private Timestamp updatedAt;
 
     public Post() {
         images = new ArrayList<>();
-    }
-
-    public Post(String postId, String userId, String title, String description,
-                double price, double area, String address, String district,
-                double lat, double lng, String type, List<String> images,
-                String status, Timestamp createdAt) {
-        this.postId = postId;
-        this.userId = userId;
-        this.title = title;
-        this.description = description;
-        this.price = price;
-        this.area = area;
-        this.address = address;
-        this.district = district;
-        this.lat = lat;
-        this.lng = lng;
-        this.type = type;
-        this.images = images;
-        this.status = status;
-        this.createdAt = createdAt;
+        amenities = new ArrayList<>();
+        status = "active";
+        active = true;
     }
 
     public String getPostId() {
@@ -59,6 +51,22 @@ public class Post {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public String getOwnerPhone() {
+        return ownerPhone;
+    }
+
+    public void setOwnerPhone(String ownerPhone) {
+        this.ownerPhone = ownerPhone;
     }
 
     public String getTitle() {
@@ -109,6 +117,14 @@ public class Post {
         this.district = district;
     }
 
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
     public double getLat() {
         return lat;
     }
@@ -138,15 +154,63 @@ public class Post {
     }
 
     public void setImages(List<String> images) {
-        this.images = images;
+        this.images = images == null ? new ArrayList<>() : images;
+    }
+
+    public List<String> getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(List<String> amenities) {
+        this.amenities = amenities == null ? new ArrayList<>() : amenities;
+    }
+
+    public String getPanoramaImage() {
+        return panoramaImage;
+    }
+
+    public void setPanoramaImage(String panoramaImage) {
+        this.panoramaImage = panoramaImage;
+    }
+
+    public String getPanoramaPath() {
+        return panoramaPath;
+    }
+
+    public void setPanoramaPath(String panoramaPath) {
+        this.panoramaPath = panoramaPath;
+    }
+
+    public String getStorageFolder() {
+        return storageFolder;
+    }
+
+    public void setStorageFolder(String storageFolder) {
+        this.storageFolder = storageFolder;
     }
 
     public String getStatus() {
-        return status;
+        if (status != null && !status.isEmpty()) {
+            return status;
+        }
+        return isActive() ? "active" : "hidden";
     }
 
     public void setStatus(String status) {
         this.status = status;
+        this.active = !"hidden".equalsIgnoreCase(status);
+    }
+
+    public boolean isActive() {
+        if (active != null) {
+            return active;
+        }
+        return !"hidden".equalsIgnoreCase(status);
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+        this.status = Boolean.TRUE.equals(active) ? "active" : "hidden";
     }
 
     public Timestamp getCreatedAt() {
@@ -155,5 +219,21 @@ public class Post {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public boolean hasPanorama() {
+        return panoramaImage != null && !panoramaImage.isEmpty();
+    }
+
+    public boolean isRoommatePost() {
+        return "roommate".equalsIgnoreCase(type);
     }
 }

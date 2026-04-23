@@ -2,34 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:gravity="center"
     android:orientation="vertical"
-    android:background="@android:color/white"
-    android:padding="24dp"
-    android:gravity="center">
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đăng nhập"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/edtEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:hint="Email"
-        android:textColor="@android:color/black"
-        android:textColorHint="#AAAAAA" />
+        android:inputType="textEmailAddress"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurface" />
 
     <EditText
         android:id="@+id/edtPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:textColor="@android:color/black"
-        android:textColorHint="#AAAAAA"
+        android:layout_marginTop="16dp"
+        android:hint="Mật khẩu"
         android:inputType="textPassword"
-        android:layout_marginTop="16dp" />
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurface" />
 
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Đăng nhập"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="24dp"
+        android:text="Đăng nhập" />
 
 </LinearLayout>

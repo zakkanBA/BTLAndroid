@@ -2,21 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
-        android:icon="@android:drawable/ic_menu_view"
-        android:title="Home" />
+        android:icon="@drawable/ic_nav_home"
+        android:title="Trang chủ" />
 
     <item
         android:id="@+id/nav_map"
-        android:icon="@android:drawable/ic_menu_mylocation"
-        android:title="Map" />
+        android:icon="@drawable/ic_nav_map"
+        android:title="Bản đồ" />
 
     <item
         android:id="@+id/nav_messages"
-        android:icon="@android:drawable/ic_dialog_email"
-        android:title="Message" />
+        android:icon="@drawable/ic_nav_messages"
+        android:title="Tin nhắn" />
 
     <item
         android:id="@+id/nav_profile"
-        android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="Profile" />
+        android:icon="@drawable/ic_nav_profile"
+        android:title="Cá nhân" />
+
+    <item
+        android:id="@+id/nav_admin"
+        android:icon="@drawable/ic_nav_admin"
+        android:title="Quản trị"
+        android:visible="false" />
 </menu>

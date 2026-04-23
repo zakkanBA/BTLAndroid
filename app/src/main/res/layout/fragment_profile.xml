@@ -2,23 +2,38 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center_horizontal">
+        android:padding="24dp">
+
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@android:drawable/sym_def_app_icon" />
 
         <TextView
             android:id="@+id/txtName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Họ tên"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="22sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtRole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Vai trò: Người dùng"
+            android:textColor="?attr/colorPrimary" />
 
         <TextView
             android:id="@+id/txtEmail"
@@ -26,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="email@gmail.com"
-            android:textColor="#BBBBBB"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="15sp" />
 
         <TextView
@@ -35,43 +50,81 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="0123456789"
-            android:textColor="#BBBBBB"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Giao diện thông minh"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchAutoTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Tự động đổi màu theo ánh sáng môi trường" />
+
+        <TextView
+            android:id="@+id/txtThemeHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Khi bật, ứng dụng sẽ đổi giao diện sau khi độ sáng ổn định khoảng 2 giây."
+            android:textColor="?attr/colorOnSurface" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnLightMode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sáng" />
+
+            <Button
+                android:id="@+id/btnDarkMode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="Tối" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnEditProfile"
-            android:layout_width="220dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Sửa thông tin" />
+            android:text="Sửa hồ sơ" />
 
         <Button
             android:id="@+id/btnCreatePost"
-            android:layout_width="220dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Đăng bài" />
+            android:layout_marginTop="12dp"
+            android:text="Đăng tin mới" />
 
         <Button
             android:id="@+id/btnMyPosts"
-            android:layout_width="220dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Bài của tôi" />
-
-        <Button
-            android:id="@+id/btnAdmin"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Quản trị"
-            android:visibility="gone" />
+            android:layout_marginTop="12dp"
+            android:text="Quản lý tin của tôi" />
 
         <Button
             android:id="@+id/btnLogout"
-            android:layout_width="220dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:text="Đăng xuất" />
 
     </LinearLayout>

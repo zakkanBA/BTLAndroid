@@ -3,6 +3,7 @@
     <color name="white">#FFFFFF</color>
     <color name="blue_primary">#00A3FF</color>
     <color name="orange_primary">#FF8A00</color>
+    <color name="orange_dark">#C96A00</color>
     <color name="gold_primary">#E7C36A</color>
     <color name="gray_icon">#5A5A5A</color>
     <color name="card_border">#F2F2F2</color>
@@ -10,4 +11,7 @@
     <color name="red_button">#F3B1B1</color>
     <color name="teal_message">#27D3C5</color>
     <color name="primary">#2196F3</color>
+    <color name="surface_light">#F7F9FC</color>
+    <color name="surface_dark">#11131A</color>
+    <color name="card_dark">#1B1F2A</color>
 </resources>
