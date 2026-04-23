@@ -1,6 +1,5 @@
 package com.example.btland.adapters;
-
-import android.view.Gravity;
+//est
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
