@@ -2,8 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="?attr/colorSurface"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtChatTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Hội thoại"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerMessages"
@@ -14,26 +24,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:background="#111111">
+        android:background="?attr/colorSurface"
+        android:padding="8dp">
 
         <EditText
             android:id="@+id/edtMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#222222"
+            android:background="#22303A"
+            android:hint="Nhập tin nhắn..."
             android:padding="10dp"
-            android:textColor="@android:color/black"
-            android:hint="Nhập tin..."
-            android:textColorHint="#888888" />
+            android:textColor="@android:color/white"
+            android:textColorHint="#CCCCCC" />
 
         <Button
             android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gửi"
-            android:layout_marginStart="6dp" />
+            android:layout_marginStart="6dp"
+            android:text="Gửi" />
     </LinearLayout>
 
 </LinearLayout>

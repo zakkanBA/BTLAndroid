@@ -3,8 +3,10 @@ package com.example.btland.adapters;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.btland.activities.AdminUserPostsActivity;
@@ -44,15 +46,26 @@ public class UserAdminAdapter extends RecyclerView.Adapter<UserAdminAdapter.User
 
         holder.binding.btnToggleBan.setOnClickListener(v -> {
             boolean newStatus = !user.isBanned();
+            String action = newStatus ? "khóa" : "mở khóa";
 
-            FirebaseFirestore.getInstance()
-                    .collection("users")
-                    .document(user.getUserId())
-                    .update("isBanned", newStatus)
-                    .addOnSuccessListener(unused -> {
-                        user.setBanned(newStatus);
-                        notifyItemChanged(position);
-                    });
+            new AlertDialog.Builder(holder.itemView.getContext())
+                    .setTitle("Xác nhận")
+                    .setMessage("Bạn có chắc muốn " + action + " tài khoản này?")
+                    .setPositiveButton("Đồng ý", (dialog, which) ->
+                            FirebaseFirestore.getInstance()
+                                    .collection("users")
+                                    .document(user.getUserId())
+                                    .update("isBanned", newStatus)
+                                    .addOnSuccessListener(unused -> {
+                                        user.setBanned(newStatus);
+                                        notifyItemChanged(position);
+                                        Toast.makeText(holder.itemView.getContext(), "Đã cập nhật trạng thái tài khoản", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(holder.itemView.getContext(), "Không cập nhật được tài khoản", Toast.LENGTH_SHORT).show()
+                                    ))
+                    .setNegativeButton("Hủy", null)
+                    .show();
         });
 
         holder.binding.btnViewPosts.setOnClickListener(v -> {
@@ -69,9 +82,9 @@ public class UserAdminAdapter extends RecyclerView.Adapter<UserAdminAdapter.User
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
-        ItemAdminUserBinding binding;
+        final ItemAdminUserBinding binding;
 
-        public UserViewHolder(ItemAdminUserBinding binding) {
+        UserViewHolder(ItemAdminUserBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

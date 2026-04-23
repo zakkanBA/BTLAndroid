@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:background="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,62 +11,13 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <EditText
-            android:id="@+id/edtTitle"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tiêu đề"
-            android:textColor="@android:color/white"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="top"
-            android:hint="Mô tả"
-            android:minLines="3"
-            android:textColor="@android:color/white"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Giá"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/white"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtArea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Diện tích"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/white"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Địa chỉ"
-            android:textColor="@android:color/white"
-            android:textColorHint="#AAAAAA" />
-
-        <EditText
-            android:id="@+id/edtDistrict"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Quận/Huyện"
-            android:textColor="@android:color/white"
-            android:textColorHint="#AAAAAA" />
+            android:text="Đăng tin mới"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold" />
 
         <RadioGroup
             android:id="@+id/radioGroupType"
@@ -78,17 +30,118 @@
                 android:id="@+id/radioRent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cho thuê"
-                android:textColor="@android:color/white" />
+                android:text="Cho thuê nhà/phòng trọ" />
 
             <RadioButton
                 android:id="@+id/radioRoommate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:text="Ở ghép"
-                android:textColor="@android:color/white" />
+                android:layout_marginStart="16dp"
+                android:text="Tìm người ở ghép" />
         </RadioGroup>
+
+        <Spinner
+            android:id="@+id/spinnerRoomType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <EditText
+            android:id="@+id/edtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Tiêu đề (tối đa 100 ký tự)"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <EditText
+            android:id="@+id/edtPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Giá thuê theo tháng"
+            android:inputType="numberDecimal"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <EditText
+            android:id="@+id/edtArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Diện tích (m²)"
+            android:inputType="numberDecimal"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <EditText
+            android:id="@+id/edtAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Địa chỉ"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <EditText
+            android:id="@+id/edtDistrict"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Quận/Huyện"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <Button
+            android:id="@+id/btnUseCurrentLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Dùng vị trí hiện tại" />
+
+        <EditText
+            android:id="@+id/edtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="top"
+            android:hint="Mô tả chi tiết"
+            android:minLines="4"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurface" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Tiện ích"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/cbWifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wi-Fi" />
+
+        <CheckBox
+            android:id="@+id/cbParking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chỗ để xe" />
+
+        <CheckBox
+            android:id="@+id/cbPrivateWc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WC riêng" />
+
+        <CheckBox
+            android:id="@+id/cbAirConditioner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Máy lạnh" />
 
         <Button
             android:id="@+id/btnPickImages"
@@ -101,46 +154,87 @@
             android:id="@+id/btnCaptureImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Chụp ảnh" />
+            android:layout_marginTop="8dp"
+            android:text="Chụp ảnh mới" />
 
         <Button
             android:id="@+id/btnCreatePanorama"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Chọn ảnh panorama (360)" />
+            android:layout_marginTop="8dp"
+            android:text="Chọn ảnh 360 (Panorama)" />
 
-        <ImageView
-            android:id="@+id/imgPreview"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerImages"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginTop="16dp"
-            android:background="#222222"
-            android:contentDescription="preview"
-            android:scaleType="centerCrop" />
+            android:layout_height="96dp"
+            android:layout_marginTop="12dp" />
 
         <TextView
             android:id="@+id/txtImageCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Đã chọn: 0 ảnh"
-            android:textColor="@android:color/white" />
+            android:text="Ảnh thường: 0/6"
+            android:textColor="?attr/colorOnSurface" />
 
         <TextView
             android:id="@+id/txtPanoramaStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Chưa có ảnh panorama"
-            android:textColor="#BBBBBB" />
+            android:layout_marginTop="4dp"
+            android:text="Chưa có ảnh 360"
+            android:textColor="?attr/colorOnSurface" />
+
+        <Button
+            android:id="@+id/btnPreviewPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Xem trước" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Xem trước bài đăng"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtPreviewSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerPreviewImages"
+                    android:layout_width="match_parent"
+                    android:layout_height="96dp"
+                    android:layout_marginTop="12dp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <Button
             android:id="@+id/btnCreatePost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:text="Đăng bài" />
 
     </LinearLayout>

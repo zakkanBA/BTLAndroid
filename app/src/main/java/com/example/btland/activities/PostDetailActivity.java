@@ -2,24 +2,30 @@ package com.example.btland.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.example.btland.adapters.MediaPreviewAdapter;
 import com.example.btland.databinding.ActivityPostDetailBinding;
 import com.example.btland.models.Post;
+import com.example.btland.utils.PostRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 public class PostDetailActivity extends AppCompatActivity {
 
     private ActivityPostDetailBinding binding;
     private Post post;
-    private FirebaseFirestore db;
     private String currentUserId;
+    private final MediaPreviewAdapter imageAdapter = new MediaPreviewAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +33,6 @@ public class PostDetailActivity extends AppCompatActivity {
         binding = ActivityPostDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        db = FirebaseFirestore.getInstance();
         currentUserId = FirebaseAuth.getInstance().getUid();
 
         String postJson = getIntent().getStringExtra("post_json");
@@ -38,36 +43,65 @@ public class PostDetailActivity extends AppCompatActivity {
         }
 
         post = new Gson().fromJson(postJson, Post.class);
+        binding.recyclerImages.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.recyclerImages.setAdapter(imageAdapter);
+
         bindData();
+        refreshLatestPost();
         setupActions();
     }
 
     private void bindData() {
         binding.txtTitle.setText(post.getTitle());
-        binding.txtPrice.setText(((int) post.getPrice()) + " VNĐ");
-        binding.txtArea.setText(post.getArea() + " m²");
+        binding.txtPrice.setText(String.format(java.util.Locale.getDefault(), "%,.0f VNĐ/tháng", post.getPrice()));
+        binding.txtArea.setText(String.format(java.util.Locale.getDefault(), "%.1f m²", post.getArea()));
         binding.txtAddress.setText(post.getAddress());
-        binding.txtType.setText("rent".equals(post.getType()) ? "Cho thuê" : "Ở ghép");
+        binding.txtType.setText("rent".equals(post.getType()) ? "Cho thuê" : "Tìm người ở ghép");
+        binding.txtRoomType.setText(post.getRoomType() == null ? "Chưa cập nhật loại phòng" : post.getRoomType());
         binding.txtDescription.setText(post.getDescription());
+        binding.txtAmenities.setText(formatAmenities(post.getAmenities()));
+        binding.txtOwner.setText((post.getOwnerName() == null || post.getOwnerName().isEmpty() ? "Chủ bài đăng" : post.getOwnerName())
+                + (post.getOwnerPhone() == null || post.getOwnerPhone().isEmpty() ? "" : " - " + post.getOwnerPhone()));
+        binding.txtLocationPrivacy.setVisibility(post.isRoommatePost() ? View.VISIBLE : View.GONE);
+        binding.txtStatus.setText(post.isActive() ? "Đang hiển thị" : "Đã ẩn");
 
-        if (post.getImages() != null && !post.getImages().isEmpty()) {
+        List<String> images = post.getImages();
+        imageAdapter.submitItems(images);
+        if (images != null && !images.isEmpty()) {
             Glide.with(this)
-                    .load(post.getImages().get(0))
+                    .load(images.get(0))
                     .centerCrop()
                     .into(binding.imgPost);
+        } else {
+            binding.imgPost.setImageDrawable(null);
         }
 
         boolean isOwner = currentUserId != null && currentUserId.equals(post.getUserId());
-        binding.btnEditPost.setVisibility(isOwner ? android.view.View.VISIBLE : android.view.View.GONE);
-        binding.btnDeletePost.setVisibility(isOwner ? android.view.View.VISIBLE : android.view.View.GONE);
-        binding.btnChat.setVisibility(isOwner ? android.view.View.GONE : android.view.View.VISIBLE);
+        binding.btnEditPost.setVisibility(isOwner ? View.VISIBLE : View.GONE);
+        binding.btnDeletePost.setVisibility(isOwner ? View.VISIBLE : View.GONE);
+        binding.btnToggleVisibility.setVisibility(isOwner ? View.VISIBLE : View.GONE);
+        binding.btnChat.setVisibility(isOwner ? View.GONE : View.VISIBLE);
+        binding.btnToggleVisibility.setText(post.isActive() ? "Ẩn bài đăng" : "Hiện bài đăng");
+        binding.btnView360.setVisibility(post.hasPanorama() ? View.VISIBLE : View.GONE);
+    }
 
-        String panoramaUrl = post.getPanoramaImage();
-        if (panoramaUrl != null && !panoramaUrl.isEmpty()) {
-            binding.btnView360.setVisibility(android.view.View.VISIBLE);
-        } else {
-            binding.btnView360.setVisibility(android.view.View.GONE);
+    private void refreshLatestPost() {
+        if (post.getPostId() == null || post.getPostId().isEmpty()) {
+            return;
         }
+
+        FirebaseFirestore.getInstance()
+                .collection("posts")
+                .document(post.getPostId())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Post latestPost = documentSnapshot.toObject(Post.class);
+                    if (latestPost != null) {
+                        post = latestPost;
+                        bindData();
+                    }
+                });
     }
 
     private void setupActions() {
@@ -96,27 +130,50 @@ public class PostDetailActivity extends AppCompatActivity {
         });
 
         binding.btnDeletePost.setOnClickListener(v -> showDeleteConfirm());
+        binding.btnToggleVisibility.setOnClickListener(v -> toggleVisibility());
     }
 
     private void showDeleteConfirm() {
         new AlertDialog.Builder(this)
                 .setTitle("Xóa bài đăng")
                 .setMessage("Bạn có chắc muốn xóa bài đăng này không?")
-                .setPositiveButton("Xóa", (dialog, which) -> deletePost())
+                .setPositiveButton("Xóa", (dialog, which) ->
+                        PostRepository.deletePost(this, post, false, new PostRepository.ActionCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Toast.makeText(PostDetailActivity.this, "Đã xóa bài đăng", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(String errorMessage) {
+                                Toast.makeText(PostDetailActivity.this, "Xóa bài thất bại", Toast.LENGTH_SHORT).show();
+                            }
+                        }))
                 .setNegativeButton("Hủy", null)
                 .show();
     }
 
-    private void deletePost() {
-        db.collection("posts")
-                .document(post.getPostId())
-                .delete()
-                .addOnSuccessListener(unused -> {
-                    Toast.makeText(this, "Xóa bài thành công", Toast.LENGTH_SHORT).show();
-                    finish();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Xóa bài thất bại", Toast.LENGTH_SHORT).show()
-                );
+    private void toggleVisibility() {
+        PostRepository.setPostActive(post, !post.isActive(), new PostRepository.ActionCallback() {
+            @Override
+            public void onSuccess() {
+                post.setActive(!post.isActive());
+                bindData();
+                Toast.makeText(PostDetailActivity.this, "Đã cập nhật trạng thái bài đăng", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Toast.makeText(PostDetailActivity.this, "Không cập nhật được trạng thái bài đăng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private String formatAmenities(List<String> amenities) {
+        if (amenities == null || amenities.isEmpty()) {
+            return "Không có tiện ích nào được chọn";
+        }
+        return android.text.TextUtils.join(", ", amenities);
     }
 }

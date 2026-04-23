@@ -3,9 +3,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/osmMap"
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtMapHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_map_overlay"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:text="Các bài ở ghép sẽ được làm mờ vị trí trên bản đồ."
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/txtMapStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_map_overlay"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:text="Đang tải dữ liệu bản đồ..."
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnLocate"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="12dp"
+        android:background="@drawable/bg_round_button"
+        android:contentDescription="Lấy lại GPS"
+        android:padding="10dp"
+        android:src="@drawable/ic_my_location"
+        android:tint="@android:color/white" />
 
 </FrameLayout>

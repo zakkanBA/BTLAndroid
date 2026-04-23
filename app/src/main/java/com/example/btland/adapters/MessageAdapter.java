@@ -1,20 +1,25 @@
 package com.example.btland.adapters;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.btland.R;
 import com.example.btland.databinding.ItemMessageBinding;
 import com.example.btland.models.Message;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
-    private List<Message> list;
-    private String currentUserId;
+    private final List<Message> list;
+    private final String currentUserId;
 
     public MessageAdapter(List<Message> list, String currentUserId) {
         this.list = list;
@@ -33,33 +38,27 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Message msg = list.get(position);
 
         holder.binding.txtMessage.setText(msg.getContent());
-
-        // format time
         if (msg.getTimestamp() != null) {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm");
-            String time = sdf.format(msg.getTimestamp().toDate());
+            String time = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(msg.getTimestamp().toDate());
             holder.binding.txtTime.setText(time);
-        }
-
-        // trái/phải
-        if (msg.getSenderId().equals(currentUserId)) {
-            // tin của mình → bên phải
-            holder.binding.container.setBackgroundColor(0xFF27D3C5);
-
-            FrameLayout.LayoutParams params =
-                    (FrameLayout.LayoutParams) holder.binding.container.getLayoutParams();
-            params.gravity = android.view.Gravity.END;
-            holder.binding.container.setLayoutParams(params);
-
         } else {
-            // tin người khác → bên trái
-            holder.binding.container.setBackgroundColor(0xFF444444);
-
-            FrameLayout.LayoutParams params =
-                    (FrameLayout.LayoutParams) holder.binding.container.getLayoutParams();
-            params.gravity = android.view.Gravity.START;
-            holder.binding.container.setLayoutParams(params);
+            holder.binding.txtTime.setText("");
         }
+
+        boolean isCurrentUser = msg.getSenderId() != null && msg.getSenderId().equals(currentUserId);
+        holder.binding.txtReadStatus.setText(isCurrentUser ? (msg.isRead() ? "Đã đọc" : "Đã gửi") : "");
+        holder.binding.txtReadStatus.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
+
+        FrameLayout.LayoutParams params =
+                (FrameLayout.LayoutParams) holder.binding.container.getLayoutParams();
+        if (isCurrentUser) {
+            holder.binding.container.setBackgroundResource(R.drawable.bg_message_outgoing);
+            params.gravity = Gravity.END;
+        } else {
+            holder.binding.container.setBackgroundResource(R.drawable.bg_message_incoming);
+            params.gravity = Gravity.START;
+        }
+        holder.binding.container.setLayoutParams(params);
     }
 
     @Override
@@ -68,9 +67,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ItemMessageBinding binding;
+        final ItemMessageBinding binding;
 
-        public ViewHolder(ItemMessageBinding binding) {
+        ViewHolder(ItemMessageBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

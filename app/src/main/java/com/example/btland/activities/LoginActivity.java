@@ -2,6 +2,7 @@ package com.example.btland.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,13 +27,17 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-
         binding.btnLogin.setOnClickListener(v -> {
             String email = binding.edtEmail.getText().toString().trim();
             String password = binding.edtPassword.getText().toString().trim();
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Email không đúng định dạng", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -46,10 +51,10 @@ public class LoginActivity extends AppCompatActivity {
                         String uid = auth.getCurrentUser().getUid();
                         db.collection("users").document(uid).get()
                                 .addOnSuccessListener(documentSnapshot -> {
-                                    Boolean isBanned = documentSnapshot.getBoolean("isBanned");
-                                    if (Boolean.TRUE.equals(isBanned)) {
+                                    boolean isBanned = Boolean.TRUE.equals(documentSnapshot.getBoolean("isBanned"));
+                                    if (isBanned) {
                                         auth.signOut();
-                                        Toast.makeText(this, "Tài khoản đã bị khóa", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin.", Toast.LENGTH_LONG).show();
                                         return;
                                     }
 
@@ -62,6 +67,5 @@ public class LoginActivity extends AppCompatActivity {
                                 );
                     });
         });
-
     }
 }

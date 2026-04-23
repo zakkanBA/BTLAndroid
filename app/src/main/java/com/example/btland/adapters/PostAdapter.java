@@ -14,6 +14,7 @@ import com.example.btland.models.Post;
 import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.Locale;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
@@ -39,8 +40,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         Post post = postList.get(position);
 
         holder.binding.txtTitle.setText(post.getTitle());
-        holder.binding.txtPrice.setText(((int) post.getPrice()) + " VNĐ");
+        holder.binding.txtPrice.setText(String.format(Locale.getDefault(), "%,.0f VNĐ", post.getPrice()));
         holder.binding.txtAddress.setText(post.getAddress());
+        holder.binding.txtSubtitle.setText(
+                ("rent".equals(post.getType()) ? "Cho thuê" : "Ở ghép")
+                        + " • " + (post.getRoomType() == null ? "Chưa rõ loại phòng" : post.getRoomType())
+                        + " • " + String.format(Locale.getDefault(), "%.1f m²", post.getArea())
+        );
+        holder.binding.txtStatus.setText(post.isActive() ? "Đang hiển thị" : "Đã ẩn");
 
         if (post.getImages() != null && !post.getImages().isEmpty()) {
             Glide.with(holder.itemView.getContext())
@@ -64,9 +71,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     static class PostViewHolder extends RecyclerView.ViewHolder {
-        ItemPostBinding binding;
+        final ItemPostBinding binding;
 
-        public PostViewHolder(ItemPostBinding binding) {
+        PostViewHolder(ItemPostBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

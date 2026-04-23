@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:background="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,8 +13,16 @@
             android:id="@+id/imgPost"
             android:layout_width="match_parent"
             android:layout_height="260dp"
-            android:background="#222222"
+            android:background="#22303A"
             android:scaleType="centerCrop" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerImages"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:layout_marginTop="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,8 +34,7 @@
                 android:id="@+id/txtTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tiêu đề"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -36,8 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="2500000 VNĐ"
-                android:textColor="#FF8A00"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="18sp" />
 
             <TextView
@@ -45,35 +51,65 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="20 m²"
-                android:textColor="@android:color/white"
-                android:textSize="15sp" />
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:id="@+id/txtAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Địa chỉ"
-                android:textColor="#BBBBBB"
-                android:textSize="15sp" />
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:id="@+id/txtType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Loại tin"
-                android:textColor="#BBBBBB"
-                android:textSize="15sp" />
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
-                android:id="@+id/txtDescriptionLabel"
+                android:id="@+id/txtRoomType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/txtOwner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/txtAmenities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/txtLocationPrivacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Bài đăng ở ghép chỉ hiển thị khu vực gần đúng trên bản đồ để bảo vệ quyền riêng tư."
+                android:textColor="?attr/colorSecondary"
+                android:visibility="gone" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:text="Mô tả"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -82,16 +118,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Nội dung mô tả"
-                android:textColor="#DDDDDD"
-                android:textSize="15sp" />
+                android:textColor="?attr/colorOnSurface" />
 
             <Button
                 android:id="@+id/btnView360"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Xem ảnh 360"
+                android:text="Xem phòng 360"
                 android:visibility="gone" />
 
             <Button
@@ -107,6 +141,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Sửa bài"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnToggleVisibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Ẩn bài đăng"
                 android:visibility="gone" />
 
             <Button
