@@ -83,6 +83,7 @@ public class PostDetailActivity extends AppCompatActivity {
         binding.btnToggleVisibility.setVisibility(isOwner ? View.VISIBLE : View.GONE);
         binding.btnChat.setVisibility(isOwner ? View.GONE : View.VISIBLE);
         binding.btnToggleVisibility.setText(post.isActive() ? "Ẩn bài đăng" : "Hiện bài đăng");
+        binding.btnView360.setText("Xem phòng 360");
         binding.btnView360.setVisibility(post.hasPanorama() ? View.VISIBLE : View.GONE);
     }
 

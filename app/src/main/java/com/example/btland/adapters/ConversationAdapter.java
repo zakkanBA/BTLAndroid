@@ -37,7 +37,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Conversation conv = list.get(position);
+        String conversationDocId = conv.getConversationId();
         String otherUserId = "";
+
         for (String id : conv.getUserIds()) {
             if (!id.equals(currentUserId)) {
                 otherUserId = id;
@@ -48,16 +50,43 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
         Map<String, String> participantNames = conv.getParticipantNames();
         String cachedName = participantNames.get(finalOtherUserId);
-        if (cachedName != null && !cachedName.isEmpty()) {
+        boolean hasRealCachedName = cachedName != null
+                && !cachedName.trim().isEmpty()
+                && !"Người dùng".equalsIgnoreCase(cachedName.trim());
+
+        if (hasRealCachedName) {
             holder.binding.txtUser.setText(cachedName);
         } else {
+            holder.itemView.setTag(finalOtherUserId);
+            holder.binding.txtUser.setText("Đang tải tên...");
             FirebaseFirestore.getInstance()
                     .collection("users")
                     .document(finalOtherUserId)
                     .get()
                     .addOnSuccessListener(doc -> {
+                        if (!finalOtherUserId.equals(holder.itemView.getTag())) {
+                            return;
+                        }
+
                         String name = doc.getString("name");
-                        holder.binding.txtUser.setText(name != null ? name : "Người dùng");
+                        String resolvedName = name != null && !name.trim().isEmpty()
+                                ? name.trim()
+                                : "Người dùng";
+                        holder.binding.txtUser.setText(resolvedName);
+
+                        if (!"Người dùng".equals(resolvedName)
+                                && conversationDocId != null
+                                && !conversationDocId.isEmpty()) {
+                            FirebaseFirestore.getInstance()
+                                    .collection("conversations")
+                                    .document(conversationDocId)
+                                    .update("participantNames." + finalOtherUserId, resolvedName);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        if (finalOtherUserId.equals(holder.itemView.getTag())) {
+                            holder.binding.txtUser.setText("Người dùng");
+                        }
                     });
         }
 
@@ -71,7 +100,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
 
         long unreadCount = conv.getUnreadCounts().getOrDefault(currentUserId, 0L);
-        holder.binding.txtUnreadBadge.setVisibility(unreadCount > 0 ? android.view.View.VISIBLE : android.view.View.GONE);
+        holder.binding.txtUnreadBadge.setVisibility(
+                unreadCount > 0 ? android.view.View.VISIBLE : android.view.View.GONE
+        );
         holder.binding.txtUnreadBadge.setText(String.valueOf(unreadCount));
 
         holder.itemView.setOnClickListener(v -> {

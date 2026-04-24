@@ -22,7 +22,7 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if signedIn() && (isOwner(userId) || isAdmin());
+      allow read: if signedIn();
       allow create: if signedIn() && isOwner(userId);
       allow update: if signedIn() && (isOwner(userId) || isAdmin());
       allow delete: if isAdmin();
