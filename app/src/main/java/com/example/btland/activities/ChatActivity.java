@@ -6,6 +6,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.btland.adapters.MessageAdapter;
 import com.example.btland.databinding.ActivityChatBinding;
 import com.example.btland.models.Message;
@@ -30,6 +32,7 @@ public class ChatActivity extends AppCompatActivity {
     private String conversationId;
     private String currentUserName = "Bạn";
     private String receiverName = "Người dùng";
+    private String receiverAvatarUrl = "";
     private FirebaseFirestore db;
     private final List<Message> messageList = new ArrayList<>();
     private MessageAdapter adapter;
@@ -57,15 +60,10 @@ public class ChatActivity extends AppCompatActivity {
         binding.recyclerMessages.setAdapter(adapter);
         binding.btnSend.setEnabled(false);
 
-        loadParticipantNames();
-        ensureConversationDocument(() -> {
-            conversationReady = true;
-            binding.btnSend.setEnabled(true);
-        });
-        loadMessages();
-        markMessagesAsRead();
-
+        binding.btnBack.setOnClickListener(v -> finish());
         binding.btnSend.setOnClickListener(v -> sendMessage());
+
+        loadParticipantNames();
     }
 
     private String buildConversationId(String firstUserId, String secondUserId) {
@@ -75,13 +73,16 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadParticipantNames() {
+        final int[] loadedCount = {0};
+
         db.collection("users").document(currentUserId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     String name = documentSnapshot.getString("name");
                     if (name != null && !name.isEmpty()) {
                         currentUserName = name;
                     }
-                    ensureConversationDocument(null);
+                    loadedCount[0]++;
+                    if (loadedCount[0] == 2) onBothNamesLoaded();
                 });
 
         db.collection("users").document(receiverId).get()
@@ -91,8 +92,32 @@ public class ChatActivity extends AppCompatActivity {
                         receiverName = name;
                         binding.txtChatTitle.setText(name);
                     }
-                    ensureConversationDocument(null);
+
+                    String avatarUrl = documentSnapshot.getString("avatarUrl");
+                    if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                        receiverAvatarUrl = avatarUrl;
+                        Glide.with(this)
+                                .load(avatarUrl)
+                                .transform(new CircleCrop())
+                                .placeholder(android.R.drawable.sym_def_app_icon)
+                                .error(android.R.drawable.sym_def_app_icon)
+                                .into(binding.imgReceiverAvatar);
+                    } else {
+                        binding.imgReceiverAvatar.setImageResource(android.R.drawable.sym_def_app_icon);
+                    }
+
+                    loadedCount[0]++;
+                    if (loadedCount[0] == 2) onBothNamesLoaded();
                 });
+    }
+
+    private void onBothNamesLoaded() {
+        ensureConversationDocument(() -> {
+            conversationReady = true;
+            binding.btnSend.setEnabled(true);
+            loadMessages();
+            markMessagesAsRead();
+        });
     }
 
     private void ensureConversationDocument(@androidx.annotation.Nullable Runnable onReady) {

@@ -5,15 +5,46 @@
     android:background="?attr/colorSurface"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtChatTitle"
+    <!-- Header: back + avatar + tên -->
+    <LinearLayout
+        android:id="@+id/chatHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Hội thoại"
-        android:textColor="?attr/colorOnSurface"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="56dp"
+        android:background="?attr/colorSurface"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@drawable/ic_arrow_back" />
+
+        <ImageView
+            android:id="@+id/imgReceiverAvatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/circle_avatar_bg"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/txtChatTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:text="Hội thoại"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerMessages"

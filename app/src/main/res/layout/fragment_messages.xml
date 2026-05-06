@@ -6,6 +6,17 @@
     android:orientation="vertical">
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="8dp"
+        android:text="Tin nhắn"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/txtEmptyConversations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

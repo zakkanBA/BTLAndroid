@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.btland.activities.ChatActivity;
 import com.example.btland.databinding.ItemConversationBinding;
 import com.example.btland.models.Conversation;
@@ -60,6 +62,24 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                         holder.binding.txtUser.setText(name != null ? name : "Người dùng");
                     });
         }
+
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(finalOtherUserId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    String avatarUrl = doc.getString("avatarUrl");
+                    if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                        Glide.with(holder.itemView.getContext())
+                                .load(avatarUrl)
+                                .transform(new CircleCrop())
+                                .placeholder(android.R.drawable.sym_def_app_icon)
+                                .error(android.R.drawable.sym_def_app_icon)
+                                .into(holder.binding.imgAvatar);
+                    } else {
+                        holder.binding.imgAvatar.setImageResource(android.R.drawable.sym_def_app_icon);
+                    }
+                });
 
         holder.binding.txtLastMessage.setText(conv.getLastMessage());
         if (conv.getLastTimestamp() != null) {
