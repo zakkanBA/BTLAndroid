@@ -27,6 +27,7 @@ public class Post {
     private String storageFolder;
     private String status;
     private Boolean active;
+    private Boolean adminHiddenByBan;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -211,6 +212,14 @@ public class Post {
     public void setActive(Boolean active) {
         this.active = active;
         this.status = Boolean.TRUE.equals(active) ? "active" : "hidden";
+    }
+
+    public boolean isAdminHiddenByBan() {
+        return Boolean.TRUE.equals(adminHiddenByBan);
+    }
+
+    public void setAdminHiddenByBan(Boolean adminHiddenByBan) {
+        this.adminHiddenByBan = adminHiddenByBan;
     }
 
     public Timestamp getCreatedAt() {
