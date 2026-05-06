@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:text="BTLAND"
+        android:text="FASTHOME"
         android:textColor="?attr/colorPrimary"
         android:textSize="30sp"
         android:textStyle="bold" />
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
-        android:text="Tìm phòng trọ, ở ghép, bản đồ quanh đây và chat nội bộ"
+        android:text="Tìm phòng trọ, ở ghép nhanh chóng"
         android:textColor="?attr/colorOnSurface"
         android:textSize="16sp" />
 

@@ -8,7 +8,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.ArrayAdapter;
@@ -41,6 +40,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CreatePostActivity extends AppCompatActivity {
+
+    private static final int MAX_REGULAR_IMAGES = 6;
 
     private ActivityCreatePostBinding binding;
 
@@ -98,6 +99,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         binding.recyclerPreviewImages.setAdapter(previewImagesAdapter);
 
+        binding.btnCreatePanorama.setText("Chọn ảnh 360");
         binding.btnPickImages.setOnClickListener(v -> pickImages());
         binding.btnCaptureImage.setOnClickListener(v -> openCameraWithRationale());
         binding.btnCreatePanorama.setOnClickListener(v -> pickPanorama());
@@ -112,13 +114,13 @@ public class CreatePostActivity extends AppCompatActivity {
 
     private void initLaunchers() {
         pickImagesLauncher = registerForActivityResult(
-                new ActivityResultContracts.PickMultipleVisualMedia(6),
+                new ActivityResultContracts.PickMultipleVisualMedia(MAX_REGULAR_IMAGES),
                 uris -> {
                     if (uris == null || uris.isEmpty()) {
                         return;
                     }
                     selectedImageUris.clear();
-                    selectedImageUris.addAll(uris.subList(0, Math.min(uris.size(), 6)));
+                    selectedImageUris.addAll(uris.subList(0, Math.min(uris.size(), MAX_REGULAR_IMAGES)));
                     refreshSelectedImages();
                 });
 
@@ -140,7 +142,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 new ActivityResultContracts.TakePicture(),
                 success -> {
                     if (success && cameraImageUri != null) {
-                        if (selectedImageUris.size() == 6) {
+                        if (selectedImageUris.size() == MAX_REGULAR_IMAGES) {
                             selectedImageUris.remove(selectedImageUris.size() - 1);
                         }
                         selectedImageUris.add(0, cameraImageUri);
@@ -191,8 +193,8 @@ public class CreatePostActivity extends AppCompatActivity {
         }
 
         new AlertDialog.Builder(this)
-                .setTitle("Quyền Camera")
-                .setMessage("Ứng dụng cần quyền Camera để chụp ảnh thực tế của phòng ngay trong màn hình đăng tin.")
+                .setTitle("Quyền camera")
+                .setMessage("Ứng dụng cần quyền camera để chụp ảnh thực tế của phòng ngay trong màn hình đăng tin.")
                 .setPositiveButton("Tiếp tục", (dialog, which) ->
                         requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA))
                 .setNegativeButton("Hủy", null)
@@ -228,7 +230,7 @@ public class CreatePostActivity extends AppCompatActivity {
         }
 
         new AlertDialog.Builder(this)
-                .setTitle("Quyền Vị trí")
+                .setTitle("Quyền vị trí")
                 .setMessage("Ứng dụng cần quyền vị trí để lấy tọa độ GPS khi bạn muốn dùng vị trí hiện tại cho bài đăng.")
                 .setPositiveButton("Tiếp tục", (dialog, which) ->
                         requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION))
@@ -306,12 +308,14 @@ public class CreatePostActivity extends AppCompatActivity {
     }
 
     private void updateImageCount() {
-        binding.txtImageCount.setText("Ảnh thường: " + selectedImageUris.size() + "/6");
+        binding.txtImageCount.setText("Ảnh thường: " + selectedImageUris.size() + "/" + MAX_REGULAR_IMAGES);
     }
 
     private void updatePanoramaStatus() {
         binding.txtPanoramaStatus.setText(
-                panoramaImageUri == null ? "Chưa có ảnh 360" : "Đã chọn ảnh 360 hợp lệ"
+                panoramaImageUri == null
+                        ? "Chưa có ảnh 360. Nhấn nút bên trên để chọn ảnh panorama từ thư viện."
+                        : "Đã chọn ảnh 360 hợp lệ."
         );
     }
 
@@ -512,7 +516,7 @@ public class CreatePostActivity extends AppCompatActivity {
         String storagePath = storageFolder + "/image_" + System.currentTimeMillis() + "_" + index + ".jpg";
         FirebaseStorageHelper.uploadFile(selectedImageUris.get(index), storagePath, new FirebaseStorageHelper.UploadCallback() {
             @Override
-            public void onSuccess(String downloadUrl, String storagePath) {
+            public void onSuccess(String downloadUrl, String path) {
                 uploadedImageUrls.add(downloadUrl);
                 uploadRegularImages(index + 1, storageFolder, uploadedImageUrls, callback);
             }
@@ -533,8 +537,8 @@ public class CreatePostActivity extends AppCompatActivity {
         String storagePath = storageFolder + "/panorama_" + System.currentTimeMillis() + ".jpg";
         FirebaseStorageHelper.uploadFile(panoramaImageUri, storagePath, new FirebaseStorageHelper.UploadCallback() {
             @Override
-            public void onSuccess(String downloadUrl, String storagePath) {
-                callback.onComplete(downloadUrl, storagePath);
+            public void onSuccess(String downloadUrl, String path) {
+                callback.onComplete(downloadUrl, path);
             }
 
             @Override
@@ -598,7 +602,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 return false;
             }
             double ratio = options.outWidth / (double) options.outHeight;
-            return ratio >= 1.85 && ratio <= 2.15;
+            return ratio >= 1.85d && ratio <= 2.15d;
         } catch (Exception e) {
             return false;
         }
