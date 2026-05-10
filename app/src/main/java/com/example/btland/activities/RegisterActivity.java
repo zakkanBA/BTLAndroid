@@ -84,8 +84,10 @@ public class RegisterActivity extends AppCompatActivity {
                     db.collection("users").document(uid)
                             .set(user)
                             .addOnSuccessListener(unused -> {
-                                Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(this, MainActivity.class));
+                                task.getResult().getUser().sendEmailVerification();
+                                auth.signOut();
+                                Toast.makeText(this, "Đăng ký thành công. Hãy kiểm tra email để xác minh tài khoản.", Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(this, LoginActivity.class));
                                 finishAffinity();
                             })
                             .addOnFailureListener(e ->

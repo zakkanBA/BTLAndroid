@@ -11,6 +11,9 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.btland.adapters.MessageAdapter;
 import com.example.btland.databinding.ActivityChatBinding;
 import com.example.btland.models.Message;
+import com.example.btland.offline.PendingMessagePayload;
+import com.example.btland.offline.PendingSyncManager;
+import com.example.btland.utils.NetworkUtils;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -83,6 +86,10 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     loadedCount[0]++;
                     if (loadedCount[0] == 2) onBothNamesLoaded();
+                })
+                .addOnFailureListener(e -> {
+                    loadedCount[0]++;
+                    if (loadedCount[0] == 2) onBothNamesLoaded();
                 });
 
         db.collection("users").document(receiverId).get()
@@ -108,10 +115,21 @@ public class ChatActivity extends AppCompatActivity {
 
                     loadedCount[0]++;
                     if (loadedCount[0] == 2) onBothNamesLoaded();
+                })
+                .addOnFailureListener(e -> {
+                    loadedCount[0]++;
+                    if (loadedCount[0] == 2) onBothNamesLoaded();
                 });
     }
 
     private void onBothNamesLoaded() {
+        if (!NetworkUtils.isOnline(this)) {
+            conversationReady = true;
+            binding.btnSend.setEnabled(true);
+            loadMessages();
+            return;
+        }
+
         ensureConversationDocument(() -> {
             conversationReady = true;
             binding.btnSend.setEnabled(true);
@@ -206,6 +224,11 @@ public class ChatActivity extends AppCompatActivity {
                 .document()
                 .getId();
 
+        if (!NetworkUtils.isOnline(this)) {
+            queueOfflineMessage(messageId, text);
+            return;
+        }
+
         Message msg = new Message(currentUserId, receiverId, text, Timestamp.now(), false);
         msg.setMessageId(messageId);
 
@@ -248,6 +271,42 @@ public class ChatActivity extends AppCompatActivity {
                     binding.btnSend.setEnabled(true);
                     Toast.makeText(this, "Không gửi được tin nhắn: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
+    }
+
+    private void queueOfflineMessage(String messageId, String text) {
+        long createdAt = System.currentTimeMillis();
+        PendingMessagePayload payload = new PendingMessagePayload();
+        payload.conversationId = conversationId;
+        payload.messageId = messageId;
+        payload.senderId = currentUserId;
+        payload.receiverId = receiverId;
+        payload.senderName = currentUserName;
+        payload.receiverName = receiverName;
+        payload.content = text;
+        payload.createdAt = createdAt;
+
+        PendingSyncManager.getInstance(this).queueMessage(payload, new PendingSyncManager.QueueCallback() {
+            @Override
+            public void onSuccess() {
+                Message localMessage = new Message(currentUserId, receiverId, text, new Timestamp(new java.util.Date(createdAt)), false);
+                localMessage.setMessageId(messageId);
+                messageList.add(localMessage);
+                adapter.notifyItemInserted(messageList.size() - 1);
+                binding.recyclerMessages.scrollToPosition(messageList.size() - 1);
+                binding.edtMessage.setText("");
+                binding.edtMessage.requestFocus();
+                isSending = false;
+                binding.btnSend.setEnabled(true);
+                Toast.makeText(ChatActivity.this, "Đang offline. Tin nhắn đã được mã hóa và sẽ tự gửi khi có mạng.", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                isSending = false;
+                binding.btnSend.setEnabled(true);
+                Toast.makeText(ChatActivity.this, "Không lưu được tin nhắn offline: " + errorMessage, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void markMessagesAsRead() {

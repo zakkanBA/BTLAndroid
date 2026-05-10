@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.btland.offline.PendingSyncManager;
 import com.example.btland.utils.ThemePreferences;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +30,7 @@ public class BTLApplication extends Application {
     public void onCreate() {
         super.onCreate();
         ThemePreferences.applySavedNightMode(this);
+        PendingSyncManager.getInstance(this).start();
         registerForegroundActivityTracker();
         registerBanStateWatcher();
     }

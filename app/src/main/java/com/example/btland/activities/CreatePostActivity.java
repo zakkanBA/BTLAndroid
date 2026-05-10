@@ -23,7 +23,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.btland.adapters.MediaPreviewAdapter;
 import com.example.btland.databinding.ActivityCreatePostBinding;
+import com.example.btland.offline.OfflineFileCache;
+import com.example.btland.offline.PendingPostPayload;
+import com.example.btland.offline.PendingSyncManager;
 import com.example.btland.utils.FirebaseStorageHelper;
+import com.example.btland.utils.NetworkUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -397,6 +401,12 @@ public class CreatePostActivity extends AppCompatActivity {
             return;
         }
 
+        if (!NetworkUtils.isOnline(this)) {
+            binding.btnCreatePost.setEnabled(false);
+            queueOfflinePost(title, description, price, area, address, district, type, roomType, collectAmenities());
+            return;
+        }
+
         binding.btnCreatePost.setEnabled(false);
         ensureUserCanPost(new UserCheckCallback() {
             @Override
@@ -422,6 +432,53 @@ public class CreatePostActivity extends AppCompatActivity {
                 Toast.makeText(CreatePostActivity.this, message, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void queueOfflinePost(String title, String description, double price, double area,
+                                  String address, String district, String type, String roomType,
+                                  List<String> amenities) {
+        new Thread(() -> {
+            try {
+                PendingPostPayload payload = new PendingPostPayload();
+                payload.postId = db.collection("posts").document().getId();
+                payload.userId = auth.getCurrentUser().getUid();
+                payload.ownerName = auth.getCurrentUser().getEmail() == null ? "" : auth.getCurrentUser().getEmail();
+                payload.ownerPhone = "";
+                payload.title = title;
+                payload.description = description;
+                payload.price = price;
+                payload.area = area;
+                payload.address = address;
+                payload.district = district;
+                payload.type = type;
+                payload.roomType = roomType;
+                payload.lat = selectedLat;
+                payload.lng = selectedLng;
+                payload.amenities = amenities;
+                payload.createdAt = System.currentTimeMillis();
+                payload.imageUris = OfflineFileCache.copyUris(this, selectedImageUris, "post");
+                payload.panoramaUri = OfflineFileCache.copyUriNullable(this, panoramaImageUri, "panorama");
+
+                runOnUiThread(() -> PendingSyncManager.getInstance(this).queuePost(payload, new PendingSyncManager.QueueCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(CreatePostActivity.this, "Đang offline. Bài đăng đã được mã hóa và sẽ tự đăng khi có mạng.", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        binding.btnCreatePost.setEnabled(true);
+                        Toast.makeText(CreatePostActivity.this, "Không lưu được bài offline: " + errorMessage, Toast.LENGTH_LONG).show();
+                    }
+                }));
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    binding.btnCreatePost.setEnabled(true);
+                    Toast.makeText(this, "Không lưu được ảnh offline: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+            }
+        }).start();
     }
 
     private void ensureUserCanPost(UserCheckCallback callback) {

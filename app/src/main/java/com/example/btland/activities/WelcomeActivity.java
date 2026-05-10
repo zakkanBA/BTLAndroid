@@ -28,17 +28,28 @@ public class WelcomeActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            FirebaseFirestore.getInstance().collection("users").document(currentUser.getUid()).get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        boolean isBanned = Boolean.TRUE.equals(documentSnapshot.getBoolean("isBanned"));
-                        if (isBanned) {
-                            FirebaseAuth.getInstance().signOut();
-                            return;
-                        }
-
-                        startActivity(new Intent(this, MainActivity.class));
-                        finish();
-                    });
+            currentUser.reload().addOnCompleteListener(task -> {
+                FirebaseUser reloadedUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (reloadedUser == null || !reloadedUser.isEmailVerified()) {
+                    FirebaseAuth.getInstance().signOut();
+                    return;
+                }
+                checkBanAndOpenApp(reloadedUser);
+            });
         }
+    }
+
+    private void checkBanAndOpenApp(FirebaseUser currentUser) {
+        FirebaseFirestore.getInstance().collection("users").document(currentUser.getUid()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    boolean isBanned = Boolean.TRUE.equals(documentSnapshot.getBoolean("isBanned"));
+                    if (isBanned) {
+                        FirebaseAuth.getInstance().signOut();
+                        return;
+                    }
+
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                });
     }
 }
