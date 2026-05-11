@@ -1,4 +1,4 @@
-package com.example.btland.activities;
+    package com.example.btland.activities;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

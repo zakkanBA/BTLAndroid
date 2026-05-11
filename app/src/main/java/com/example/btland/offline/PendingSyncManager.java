@@ -37,6 +37,11 @@ public final class PendingSyncManager {
         void onError(String errorMessage);
     }
 
+    /** Callback để ChatActivity biết tin nhắn pending nào vừa sync xong */
+    public interface MessageSyncedListener {
+        void onMessageSynced(String messageId);
+    }
+
     private static final String TYPE_POST = "post";
     private static final String TYPE_MESSAGE = "message";
 
@@ -50,6 +55,15 @@ public final class PendingSyncManager {
     private boolean syncing;
     private boolean syncRequested;
     private boolean networkCallbackRegistered;
+    private MessageSyncedListener messageSyncedListener;
+
+    public void setMessageSyncedListener(MessageSyncedListener listener) {
+        this.messageSyncedListener = listener;
+    }
+
+    public void removeMessageSyncedListener() {
+        this.messageSyncedListener = null;
+    }
 
     private PendingSyncManager(Context context) {
         appContext = context.getApplicationContext();
@@ -167,7 +181,13 @@ public final class PendingSyncManager {
                     db.collection("conversations")
                             .document(payload.conversationId)
                             .set(updates, SetOptions.merge())
-                            .addOnSuccessListener(result -> deleteAction(action.id, onDone))
+                            .addOnSuccessListener(result -> {
+                                // Thông báo cho listener (ChatActivity) rằng tin này đã gửi xong
+                                if (messageSyncedListener != null) {
+                                    mainHandler.post(() -> messageSyncedListener.onMessageSynced(payload.messageId));
+                                }
+                                deleteAction(action.id, onDone);
+                            })
                             .addOnFailureListener(e -> syncing = false);
                 })
                 .addOnFailureListener(e -> syncing = false);

@@ -9,6 +9,8 @@ public class Message {
     private String content;
     private Timestamp timestamp;
     private boolean read;
+    // true = tin nhắn đang chờ gửi (offline), không lưu lên Firestore
+    private transient boolean pending;
 
     public Message() {}
 
@@ -42,4 +44,7 @@ public class Message {
 
     public boolean isRead() { return read; }
     public void setRead(boolean read) { this.read = read; }
+
+    public boolean isPending() { return pending; }
+    public void setPending(boolean pending) { this.pending = pending; }
 }

@@ -46,8 +46,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
         boolean isCurrentUser = msg.getSenderId() != null && msg.getSenderId().equals(currentUserId);
-        holder.binding.txtReadStatus.setText(isCurrentUser ? (msg.isRead() ? "Đã đọc" : "Đã gửi") : "");
-        holder.binding.txtReadStatus.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
+
+        if (isCurrentUser) {
+            holder.binding.txtReadStatus.setVisibility(View.VISIBLE);
+            if (msg.isPending()) {
+                holder.binding.txtReadStatus.setText("Đang gửi...");
+            } else if (msg.isRead()) {
+                holder.binding.txtReadStatus.setText("Đã đọc");
+            } else {
+                holder.binding.txtReadStatus.setText("Đã gửi");
+            }
+        } else {
+            holder.binding.txtReadStatus.setVisibility(View.GONE);
+        }
 
         FrameLayout.LayoutParams params =
                 (FrameLayout.LayoutParams) holder.binding.container.getLayoutParams();
